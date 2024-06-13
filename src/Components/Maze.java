@@ -39,8 +39,6 @@ public class Maze extends JPanel implements KeyListener {
         isGameOver = false;
 
 
-
-
         if (side < 6 || side > 12) {
             JOptionPane.showMessageDialog(null, "Side length must be between 6 and 12");
             throw new IllegalArgumentException("Side length must be between 6 and 12");
@@ -264,9 +262,11 @@ public class Maze extends JPanel implements KeyListener {
                 running = false;
                 ScoreKeeper.stop();
 
-                JOptionPane.showMessageDialog(null, "Exitting the game.");
+                String nick = JOptionPane.showInputDialog("Exitting the game. Enter your nickname for the highscores","Unknown");
+
+
                 try {
-                    ScoreKeeper.newScore(ScoreKeeper.getScoreStr());
+                    ScoreKeeper.newScore(ScoreKeeper.getScoreStr(), nick);
                     ScoreKeeper.reset();
                     System.exit(0);
                 }catch(IOException exc) {
@@ -279,6 +279,7 @@ public class Maze extends JPanel implements KeyListener {
                 if(choice == JOptionPane.YES_OPTION) {
                     resume();
                 } else {
+                    isGameOver = true;
                     gameOver();
                 }
                 break;
@@ -382,19 +383,20 @@ public class Maze extends JPanel implements KeyListener {
 
 
     public void gameOver() {
+        String nick = "unknown";
         try {
             pause();
             ScoreKeeper.stop();
-            ScoreKeeper.newScore(ScoreKeeper.getScoreStr());
             Enemy.setIsRunning(false);
             Enemy.setIsGeneratingUpgrades(false);
             Enemy.setAllGhostList(new ArrayList<Enemy>());
-            JOptionPane.showMessageDialog(null, "Game over.\nYour score will be saved");
-
+            nick = JOptionPane.showInputDialog(null, "Game over.\nYour score will be saved\nEnter your nickname","Unknown");
+            ScoreKeeper.newScore(ScoreKeeper.getScoreStr(), nick);
             JPanel parent = (JPanel) getParent();
             parent.removeAll();
             resetGame();
             parent.add(new MainMenu(ColorScheme.ACCENT_YELLOW, ColorScheme.BG_DARK));
+            ScoreKeeper.reset();
         } catch (IOException exc) {
             exc.printStackTrace();
         }

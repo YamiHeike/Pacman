@@ -2,6 +2,7 @@ package Components;
 
 import Entities.Pacman;
 import Utils.ColorScheme;
+import Utils.ImageLibrary;
 import Utils.ImageScaler;
 
 import javax.swing.*;
@@ -9,7 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class LivesTracker extends JPanel {
-    private ImageIcon livesIcon = new ImageIcon("src/assets/heart_icon.png");
+    private final ImageIcon livesIcon = new ImageIcon(ImageLibrary.HEART);
     private int panelNum;
     private int initialPanelNum;
     private boolean isTracking;

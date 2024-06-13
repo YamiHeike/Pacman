@@ -1,5 +1,6 @@
 package Entities;
 
+import Utils.ImageLibrary;
 import Utils.ImageScaler;
 
 import javax.swing.*;
@@ -24,17 +25,10 @@ public class Enemy extends Character {
         //isGeneratingUpgrades = true;
         try {
             switch (ghostColor) {
-                case RED:
-                    setIcon(ImageScaler.adjustImg(new ImageIcon("src/assets/ghost_red.png"), 27));
-                    break;
-                case PURPLE:
-                    setIcon(ImageScaler.adjustImg(new ImageIcon("src/assets/ghost_purple.png"), 27));
-                    break;
-                case BLUE:
-                    setIcon(ImageScaler.adjustImg(new ImageIcon("src/assets/ghost_blue.png"), 27));
-                    break;
-                default:
-                    throw new IllegalArgumentException("Incorrect value");
+                case RED -> setIcon(ImageScaler.adjustImg(new ImageIcon(ImageLibrary.GHOST_RED), 27));
+                case PURPLE -> setIcon(ImageScaler.adjustImg(new ImageIcon(ImageLibrary.GHOST_PURPLE), 27));
+                case BLUE -> setIcon(ImageScaler.adjustImg(new ImageIcon(ImageLibrary.GHOST_BLUE), 27));
+                default -> throw new IllegalArgumentException("Incorrect value");
             }
             moveGhost();
             generateUpgrades();

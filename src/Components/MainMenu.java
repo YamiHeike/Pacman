@@ -3,6 +3,8 @@ package Components;
 import Events.CloseApp;
 import Events.GameCreator;
 import Events.HighScoresView;
+import Utils.ColorScheme;
+import Utils.ImageLibrary;
 import Utils.ImageScaler;
 
 import javax.swing.*;
@@ -16,7 +18,7 @@ public class MainMenu extends JPanel {
 
         //Image manipulation
 
-        ImageIcon pacmanLogo = new ImageIcon("src/assets/Pacman.png");
+        ImageIcon pacmanLogo = new ImageIcon(ImageLibrary.PACMAN_LOGO);
         ImageIcon scaledPacmanLogo = ImageScaler.adjustImg(pacmanLogo,85,60);
 
         try {
@@ -29,14 +31,13 @@ public class MainMenu extends JPanel {
 
         //Components
 
-        JLabel mainHeader = new JLabel("PACMAN", scaledPacmanLogo, JLabel.CENTER);
+        Header mainHeader = new Header("PACMAN", scaledPacmanLogo,new Font(Font.MONOSPACED, Font.BOLD, 40),ColorScheme.BG_DARK, ColorScheme.ACCENT_YELLOW);
         mainHeader.setIconTextGap(15);
         mainHeader.setHorizontalTextPosition(JLabel.LEFT);
-        mainHeader.setFont(new Font(Font.MONOSPACED, Font.BOLD, 40));
-        mainHeader.setForeground(fgColor);
-        JButton newGame = new JButton("NEW GAME");
-        JButton highScores = new JButton("HIGH SCORES");
-        JButton exit = new JButton("EXIT");
+
+        Button newGame = new Button("NEW GAME", ColorScheme.BG_DARK,ColorScheme.ACCENT_YELLOW,new GameCreator());
+        Button highScores = new Button("HIGH SCORES", ColorScheme.BG_DARK, ColorScheme.ACCENT_YELLOW, new HighScoresView());
+        Button exit = new Button("EXIT", ColorScheme.BG_DARK, ColorScheme.ACCENT_YELLOW, new CloseApp());
 
         //Containers
 
@@ -64,29 +65,6 @@ public class MainMenu extends JPanel {
         controls.add(exit);
         add(hdr, BorderLayout.PAGE_START);
         add(controls, BorderLayout.CENTER);
-
-        //Event delegation
-
-        newGame.addActionListener(new GameCreator());
-        exit.addActionListener(new CloseApp());
-        highScores.addActionListener(new HighScoresView());
-
-        //Detailed styling
-
-
-
-        for(Component btn : controls.getComponents()) {
-            if(btn instanceof JButton) {
-                JButton control = (JButton) btn;
-                control.setOpaque(true);
-                control.setBackground(bgColor);
-                control.setForeground(fgColor);
-                control.setBorder(BorderFactory.createLineBorder(new Color(75, 0, 0),1));
-                control.setCursor(new Cursor(Cursor.HAND_CURSOR));
-            }
-        }
-
-
 
     }
 }

@@ -11,14 +11,26 @@ public class ScoreDisplay extends JPanel {
     private JLabel timeLabel;
     private ScoreKeeper scoreKeeper;
     private Thread labelUpdater;
-    int timeInSeconds;
-
     private final Object lock = new Object();
 
     public ScoreDisplay() {
-
-        //Building the frame
         scoreKeeper = ScoreKeeper.getInstance();
+
+        initializeLabels();
+
+        LivesTracker lives = new LivesTracker();
+        add(scoreLabel);
+        add(timeLabel);
+        add(lives);
+
+        setLayout(new FlowLayout(FlowLayout.LEFT));
+        setBackground(ColorScheme.BG_DARK);
+        setForeground(ColorScheme.LIGHT_GRAY);
+        setTracking(true);
+        startUpdating();
+    }
+
+    private void initializeLabels() {
         scoreLabel = new JLabel("Score: " + scoreKeeper.getCurrScore());
         timeLabel = new JLabel("Time: " + scoreKeeper.getCurrTimeInSeconds());
         scoreLabel.setOpaque(true);
@@ -27,19 +39,6 @@ public class ScoreDisplay extends JPanel {
         timeLabel.setOpaque(true);
         timeLabel.setBackground(ColorScheme.BG_DARK);
         timeLabel.setForeground(ColorScheme.ACCENT_YELLOW);
-        LivesTracker lives = new LivesTracker();
-
-        add(scoreLabel);
-        add(timeLabel);
-        add(lives);
-
-        setLayout(new FlowLayout(FlowLayout.LEFT));
-        setBackground(ColorScheme.BG_DARK);
-        setForeground(ColorScheme.LIGHT_GRAY);
-
-
-        startUpdating();
-
     }
 
     private void startUpdating() {
@@ -48,11 +47,12 @@ public class ScoreDisplay extends JPanel {
                 while (true) {
                     synchronized (lock) {
                         while (!scoreKeeper.isTracking()) {
+                            System.out.println("Wait...");
                             lock.wait();
+
                         }
                     }
                     updateLabels();
-
                     Thread.sleep(1000);
                 }
             } catch (InterruptedException e) {
@@ -61,22 +61,26 @@ public class ScoreDisplay extends JPanel {
             }
         });
         labelUpdater.start();
-
     }
 
     private void updateLabels() {
         SwingUtilities.invokeLater(() -> {
             int currentScore = scoreKeeper.getCurrScore();
             int currentTime = scoreKeeper.getCurrTimeInSeconds();
-
             scoreLabel.setText("Score: " + currentScore);
             timeLabel.setText("Time: " + currentTime);
         });
     }
 
+    public void resetDisplay() {
+        initializeLabels(); // Reinitialize labels
+        updateLabels(); // Update labels immediately after reset
+        resumeTracking(); // Resume tracking after reset if necessary
+    }
+
     public void resumeTracking() {
         synchronized (lock) {
-            scoreKeeper.start();
+            scoreKeeper.startTracking();
             lock.notify();
         }
     }
@@ -87,7 +91,6 @@ public class ScoreDisplay extends JPanel {
         }
     }
 
-    // Example state change methods; these should be called based on your application logic
     public void setTracking(boolean tracking) {
         if (tracking) {
             resumeTracking();

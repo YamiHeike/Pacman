@@ -10,10 +10,7 @@ import java.io.IOException;
 import java.util.Vector;
 
 public class HighScoresList extends JPanel {
-    //Getting data logic will be placed in a ScoreKeepr relying public method
     static Vector<String> data; // = new Vector<>();
-
-
 
     public HighScoresList(Color bgColor, Color fgColor) {
         try {
@@ -23,33 +20,22 @@ public class HighScoresList extends JPanel {
             data = new Vector<>();
         }
 
-
         //Components
         JList<String> highscores = new JList<>();
         HSListModel model = new HSListModel(data);
         highscores.setModel(model);
-        JLabel hsHeader = new JLabel("HIGHSCORES");
-        hsHeader.setOpaque(true);
-        hsHeader.setFont(new Font(Font.MONOSPACED, Font.BOLD, 20));
-        hsHeader.setBackground(ColorScheme.BG_DARK);
-        hsHeader.setForeground(ColorScheme.ACCENT_YELLOW);
-        JButton toMainMenu = new JButton("Back");
 
+        Header hsHeader = new Header("HIGHSCORES",null, new Font(Font.MONOSPACED, Font.BOLD, 20),ColorScheme.BG_DARK, ColorScheme.ACCENT_YELLOW);
+        Button toMainMenu = new Button("Back",ColorScheme.BG_DARK, ColorScheme.ACCENT_YELLOW,new ToMainMenu());
 
         //Containers
         JPanel hsConfig = new JPanel();
         JScrollPane hsPane = new JScrollPane(highscores);
-
         hsConfig.setLayout(new FlowLayout());
         hsConfig.add(hsHeader);
-        //General Settings
-
-        setLayout(new BorderLayout());
-
-        //Event delegation
-        toMainMenu.addActionListener(new ToMainMenu());
 
         //Building the frame
+        setLayout(new BorderLayout());
         add(hsConfig, BorderLayout.PAGE_START);
         add(hsPane, BorderLayout.CENTER);
         add(toMainMenu, BorderLayout.PAGE_END);
