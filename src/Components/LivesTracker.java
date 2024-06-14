@@ -10,10 +10,18 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class LivesTracker extends JPanel {
+    /*
+    * The main purpose of this class is to track state of Pacman's lives
+    * It uses a Thread and a livesLock monitor to ensure synchronization
+    * It also serves as a tool to visulise lives: number of JLabels = number of Pacman's lives
+    *
+    */
+
     private final ImageIcon livesIcon = new ImageIcon(ImageLibrary.HEART);
     private int panelNum;
     private int initialPanelNum;
     private boolean isTracking;
+    private Object livesLock = new Object();
     private List<JLabel> labels;
 
 
@@ -33,29 +41,24 @@ public class LivesTracker extends JPanel {
         checkForChanges();
     }
 
-    //Changes in lives tracking thread
-
     public void checkForChanges() {
         Thread checkerThread = new Thread(() -> {
             try {
                 while (isTracking) {
                     SwingUtilities.invokeLater(() -> {
-                        synchronized (this) { // Synchronize on a meaningful object
+                        //was this before
+                        synchronized (livesLock) {
                             int diff = calculateDiff();
-                            //Tested, works
                             if (diff != 0) {
                                 if (diff > 0) {
-                                    //if (panelNum > 0 && panelNum < labels.size()) {
-                                        remove(labels.remove(panelNum - 1));
-                                        panelNum--;
-                                    //}
+                                    remove(labels.remove(panelNum - 1));
+                                    panelNum--;
                                 } else {
                                     JLabel newLabel = new JLabel(ImageScaler.adjustImg(livesIcon, 20));
                                     labels.add(newLabel);
                                     panelNum++;
                                     add(newLabel);
                                 }
-
                                 revalidate();
                                 repaint();
                                 if(diff == initialPanelNum) Thread.currentThread().interrupt();
@@ -63,11 +66,10 @@ public class LivesTracker extends JPanel {
                         }
                     });
 
-
                     Thread.sleep(300);
                 }
             } catch (InterruptedException e) {
-                Thread.currentThread().interrupt(); // Restore the interrupt status
+                Thread.currentThread().interrupt();
                 e.printStackTrace();
             }
         });

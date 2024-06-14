@@ -1,14 +1,20 @@
 package Entities;
 
+import Utils.ImageLibrary;
 import Utils.ImageScaler;
 import Utils.ScoreKeeper;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Pacman extends Character {
+public class Pacman extends Character implements ComponentListener {
     //TODO: lives and default lives will need to be made static
     private int x;
     private int y;
@@ -16,32 +22,36 @@ public class Pacman extends Character {
     private int initialSpeed;
     private boolean gameOver = false;
     public boolean canKill;
-
     public static int lives;
     private int iconSize;
     private boolean isRunning;
-    private Thread movementThread;
+
     private int dx = 0;
     private int dy = 0;
 
-    static List<ImageIcon> pacmanImages = Arrays.asList(
-            new ImageIcon("src/assets/pacman_closed.png"),
-            new ImageIcon("src/assets/pacman_open.png")
+    public static List<ImageIcon> pacmanImages = Arrays.asList(
+            new ImageIcon(ImageLibrary.PACMAN_CLOSED),
+            new ImageIcon(ImageLibrary.PACMAN_OPEN)
     );
+
+    public List<String> paths = Arrays.asList(ImageLibrary.PACMAN_CLOSED, ImageLibrary.PACMAN_OPEN);
 
     public Pacman(int speed, int lives, int iconSize, Cell[][] grid) {
         super(speed, grid);
+
+        if(speed < 6) {
+            throw new IllegalArgumentException("The initial speed cannot be lower than 6");
+        }
+
         this.initialSpeed = speed;
         this.speed = speed;
         this.lives = lives;
         this.iconSize = iconSize;
         isRunning = true;
 
-        for (int i = 0; i < pacmanImages.size(); i++) {
-            pacmanImages.set(i, ImageScaler.adjustImg(pacmanImages.get(i), iconSize));
-        }
         canKill = false;
         setIcon(ImageScaler.adjustImg(pacmanImages.get(0), iconSize));
+        addComponentListener(this);
     }
 
 
@@ -71,8 +81,6 @@ public class Pacman extends Character {
                     } else {
                         addLives(-1);
                     }
-
-
                 }
                 if (c instanceof Food) {
                     Food food = (Food) c;
@@ -94,8 +102,6 @@ public class Pacman extends Character {
                     repaint();
                     revalidate();
                 }
-
-
             }
         }
     }
@@ -105,7 +111,7 @@ public class Pacman extends Character {
         Thread eatingAnimation = new Thread(() -> {
             try {
                 while (isRunning) {
-                    Thread.sleep(300);
+                    Thread.sleep(200);
                     SwingUtilities.invokeLater(() -> {
                         synchronized (this.getPacmanImages()) {
                             ImageIcon currentImg = (ImageIcon) this.getIcon();
@@ -165,4 +171,27 @@ public class Pacman extends Character {
         this.speed = speed;
     }
 
+
+    @Override
+    public void componentResized(ComponentEvent e) {
+        Component parent = getParent();
+        int width = parent.getWidth();
+        pacmanImages = ImageScaler.adjustImageArr(paths, width / 2 + width / 3);
+        setIcon(pacmanImages.get(0));
+    }
+
+    @Override
+    public void componentMoved(ComponentEvent e) {
+
+    }
+
+    @Override
+    public void componentShown(ComponentEvent e) {
+
+    }
+
+    @Override
+    public void componentHidden(ComponentEvent e) {
+
+    }
 }

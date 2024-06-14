@@ -10,7 +10,13 @@ import java.io.IOException;
 import java.util.Vector;
 
 public class HighScoresList extends JPanel {
-    static Vector<String> data; // = new Vector<>();
+    /*
+    * Data processing Panel class
+    * Displays highscores JList with HSList model
+    * TODO: model into panel
+    */
+
+    static Vector<String> data;
 
     public HighScoresList(Color bgColor, Color fgColor) {
         try {
@@ -21,6 +27,7 @@ public class HighScoresList extends JPanel {
         }
 
         //Components
+
         JList<String> highscores = new JList<>();
         HSListModel model = new HSListModel(data);
         highscores.setModel(model);
@@ -29,23 +36,21 @@ public class HighScoresList extends JPanel {
         Button toMainMenu = new Button("Back",ColorScheme.BG_DARK, ColorScheme.ACCENT_YELLOW,new ToMainMenu());
 
         //Containers
-        JPanel hsConfig = new JPanel();
+
+        Panel panel = new Panel(ColorScheme.BG_DARK, ColorScheme.ACCENT_YELLOW);
         JScrollPane hsPane = new JScrollPane(highscores);
-        hsConfig.setLayout(new FlowLayout());
-        hsConfig.add(hsHeader);
+        panel.setLayout(new FlowLayout());
+        panel.add(hsHeader);
 
         //Building the frame
+
         setLayout(new BorderLayout());
-        add(hsConfig, BorderLayout.PAGE_START);
+        setBackground(ColorScheme.BG_DARK);
+        setForeground(ColorScheme.ACCENT_YELLOW);
+        add(panel, BorderLayout.PAGE_START);
         add(hsPane, BorderLayout.CENTER);
         add(toMainMenu, BorderLayout.PAGE_END);
 
-        //Group styling
-
-        for(Component c: this.getComponents()) {
-            c.setBackground(bgColor);
-            c.setForeground(fgColor);
-        }
     }
 
 

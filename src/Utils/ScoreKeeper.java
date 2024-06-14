@@ -7,7 +7,7 @@ import java.io.*;
 import java.sql.SQLOutput;
 import java.util.*;
 
-public class ScoreKeeper {
+public class ScoreKeeper implements Serializable {
     /*
      * FINAL PURPOSE OF THIS CLASS: WRITE THE JLIST DESC ORDER INTO HIGHSCORES.TXT
      * THIS SHOULD ALSO DISPLAY THE CONTENT OF THAT FILE
@@ -44,9 +44,8 @@ public class ScoreKeeper {
         return instance;
     }
 
-
     //Score increment Thread
-    //Used to be static
+
     private static void track() {
         synchronized (scoreStr) {
             tracker = new Thread(() -> {
@@ -60,9 +59,8 @@ public class ScoreKeeper {
                         }
                         currTimeInSeconds++;
                         updateScoreStr();
-                        System.out.println("Score keeping");
+
                         if (Thread.currentThread().isInterrupted()) {
-                            // Handle interruption if needed, or just exit the loop
                             break;
                         }
 
@@ -122,12 +120,12 @@ public class ScoreKeeper {
         return this.tracksScore;
     }
 
-    public static void newScore(String score, String nick) throws IOException {
+    public static void newScore(String nick) throws IOException {
         BufferedWriter bw = null;
         try {
             bw = new BufferedWriter(new FileWriter(new File("src/highscores.txt"), true));
             if(nick == null) nick = "Unknown";
-            bw.write(score + " - " + nick);
+            bw.write(getInstance().toString() + " - " + nick);
             bw.newLine();
         } catch(Exception exc) {
             JOptionPane.showMessageDialog(null, "An Error has occured.\nYour score was not saved");
@@ -136,10 +134,6 @@ public class ScoreKeeper {
             if (bw != null)
                 bw.close();
         }
-    }
-
-    public static String getScoreStr() {
-        return scoreStr;
     }
 
     public static int getCurrTimeInSeconds() {
@@ -186,6 +180,10 @@ public class ScoreKeeper {
             sortedScores.add(entry.getKey() + " - " + entry.getValue());
         }
         return sortedScores;
+    }
+
+    public String toString() {
+        return scoreStr;
     }
 
 

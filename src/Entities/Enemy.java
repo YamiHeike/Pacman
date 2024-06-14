@@ -15,12 +15,14 @@ public class Enemy extends Character {
     public static boolean isGeneratingUpgrades;
     private Thread movementThread;
     private Thread upgradeCreator;
+    private Ghost ghostColor;
 
     public static List<Enemy> allGhostsList = new ArrayList<>();
 
     public Enemy(int initialSpeed, Cell[][] grid, Ghost ghostColor) {
         super(initialSpeed, grid);
         allGhostsList.add(this);
+        this.ghostColor = ghostColor;
         //isRunning = true;
         //isGeneratingUpgrades = true;
         try {
@@ -159,21 +161,21 @@ public class Enemy extends Character {
         allGhostsList = newList;
     }
 
+    public Ghost getGhostColor() {
+        return ghostColor;
+    }
+
     @Override
     public void interract() {
         Cell parent = grid[getXPos()][getYPos()];
         for(Component c: parent.getComponents()) {
-            System.out.println("I entered the method");
-            System.out.println(parent);
             if(c instanceof Upgrade) {
                 Upgrade upgrade = (Upgrade) c;
                 if(upgrade.getAgeInSec() >= 10) {
-                    System.out.println("Ghost ate an upgrade");
                     getUpgraded(upgrade);
                     parent.remove(c);
                     repaint();
                     revalidate();
-                    System.out.println("Ghost upgraded");
                 }
             }
         }

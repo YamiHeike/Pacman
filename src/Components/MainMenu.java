@@ -13,6 +13,10 @@ import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 import java.awt.*;
 
 public class MainMenu extends JPanel {
+    /*
+    * First JPanel the user sees while opening the game
+    * Allows navigation through the App
+    */
 
     public MainMenu(Color fgColor, Color bgColor) {
 

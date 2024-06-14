@@ -32,7 +32,7 @@ public class ScoreDisplay extends JPanel {
 
     private void initializeLabels() {
         scoreLabel = new JLabel("Score: " + scoreKeeper.getCurrScore());
-        timeLabel = new JLabel("Time: " + scoreKeeper.getCurrTimeInSeconds());
+        timeLabel = new JLabel("Time: 0:00");
         scoreLabel.setOpaque(true);
         scoreLabel.setBackground(ColorScheme.BG_DARK);
         scoreLabel.setForeground(ColorScheme.ACCENT_YELLOW);
@@ -68,14 +68,18 @@ public class ScoreDisplay extends JPanel {
             int currentScore = scoreKeeper.getCurrScore();
             int currentTime = scoreKeeper.getCurrTimeInSeconds();
             scoreLabel.setText("Score: " + currentScore);
-            timeLabel.setText("Time: " + currentTime);
+            String minutes = String.valueOf(currentTime / 60);
+            if((currentTime / 60) < 10) minutes = "0" + String.valueOf(minutes);
+            String seconds = String.valueOf(currentTime % 60);
+            if(currentTime % 60 < 10) seconds = "0" + String.valueOf(seconds);
+            timeLabel.setText(minutes + ":" + seconds);
         });
     }
 
     public void resetDisplay() {
-        initializeLabels(); // Reinitialize labels
-        updateLabels(); // Update labels immediately after reset
-        resumeTracking(); // Resume tracking after reset if necessary
+        initializeLabels();
+        updateLabels();
+        resumeTracking();
     }
 
     public void resumeTracking() {

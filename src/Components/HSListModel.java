@@ -4,7 +4,12 @@ import javax.swing.*;
 import java.io.Serializable;
 import java.util.Vector;
 
-public class HSListModel extends AbstractListModel<String> implements Serializable {
+public class HSListModel extends AbstractListModel<String> {
+    /*
+    *A model class for my highscores list
+    *
+    *
+    */
     //TODO: think about whether it's needed
     Vector<String> data;
     public HSListModel(Vector<String> data){

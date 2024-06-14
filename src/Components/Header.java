@@ -4,6 +4,11 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Header extends JLabel implements SwingConstants {
+
+    /*
+     * Simple component class used for my JLabels to avoid code redundancy
+     */
+
     private String headerText;
     private ImageIcon icon;
     private Color bgColor;

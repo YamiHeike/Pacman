@@ -1,5 +1,6 @@
 package Events;
 
+import java.awt.*;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 
@@ -9,6 +10,12 @@ public class ScaleApp implements ComponentListener {
 
     @Override
     public void componentResized(ComponentEvent e) {
+        Component source = (Component) e.getSource();
+        int width = source.getWidth();
+        int height = source.getHeight();
+
+        //Breakpoints
+
 
     }
 

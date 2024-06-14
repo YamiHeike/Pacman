@@ -20,6 +20,8 @@ public final class ImageLibrary {
     public static final String INVINCIBLE = "src/assets/invincible_icon.png";
     public static final String KILLER = "src/assets/killer_icon.png";
     public static final String SPEED = "src/assets/speed.png";
+    public static final String WALL = "src/assets/wall_icon.png";
+
 
     private ImageLibrary() {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");

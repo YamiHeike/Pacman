@@ -18,6 +18,17 @@ import java.util.List;
 
 
 public class Maze extends JPanel implements KeyListener {
+    /*
+    * Game logic class
+    * Generates a random maze with Depth-First Search Algorithm based on an entered size
+    * The actual maze size is size * 2 + 1 to ensure the size isn't even
+    * The Maze is filled with fully scalable cells
+    * The methods pause(), resume(), gameOver() allow game state change
+    * WSAD + Arrow Keys make Pacman move, Enter pauses the game, Esc exits the application
+    *
+    * */
+
+
     private final int side;
     private Color wallColor;
     private final Cell[][] grid;
@@ -27,8 +38,6 @@ public class Maze extends JPanel implements KeyListener {
     public final Object gameOverLock = new Object();
     public boolean running;
     public Pacman pac;
-
-    //TODO: think of adding wallColor as a field in this class, it will be more consistent
 
     public Maze(int side, int enemyNum, Color bgColor, Color wallColor) {
         this.side = side;
@@ -98,12 +107,9 @@ public class Maze extends JPanel implements KeyListener {
                 } else {
                     type = Enemy.Ghost.RED;
                 }
-                Enemy ghost = new Enemy(6, grid, type); // Make sure to pass the correct arguments
-                //enemies.add(ghost);
+                Enemy ghost = new Enemy(6, grid, type);
                 grid[cell.getXPos()][cell.getYPos()].add(ghost, BorderLayout.CENTER);
                 ghost.setLocation(cell.getXPos(), cell.getYPos());
-
-                // Start the movement thread for each ghost
                 ghostCounter++;
             } else {
                 int randFood = (int) (Math.random() * 3);
@@ -137,11 +143,11 @@ public class Maze extends JPanel implements KeyListener {
             ArrayList<Cell> neighbors = findUnvisited(curr, visited);
             for (Cell neighbor : neighbors) {
                 visited[neighbor.getXPos()][neighbor.getYPos()] = true;
-                addWall(curr, neighbor, wallColor);
+                addWall(curr, neighbor);
                 stack.push(neighbor);
             }
         }
-        setCellBackground(side - 1, side - 1, wallColor);
+        setCellBackground(side - 1, side - 1);
     }
 
 
@@ -164,30 +170,31 @@ public class Maze extends JPanel implements KeyListener {
         return neighbors;
     }
 
-    //TODO: Study this part
-    private void addWall(Cell current, Cell next, Color wallColor) {
+    private void addWall(Cell current, Cell next /*Color wallColor*/) {
 
         int xCurr = current.getXPos();
         int yCurr = current.getYPos();
         int xNext = next.getXPos();
         int yNext = next.getYPos();
 
-        setCellBackground(xCurr, yCurr, wallColor);
-        setCellBackground(xNext, yNext, wallColor);
+        setCellBackground(xCurr, yCurr);
+        setCellBackground(xNext, yNext);
 
         int xWall = xCurr + xNext + 1;
         int yWall = yCurr + yNext + 1;
 
-        //this simply checks whether the neighbour is a neighbour on x or on y axis
         if (xCurr == xNext) {
             grid[xWall / 2][yCurr * 2 + 1].setBackground(wallColor);
+            grid[xWall / 2][yCurr * 2 + 1].add(new Wall());
         } else {
             grid[xCurr * 2 + 1][yWall / 2].setBackground(wallColor);
+            grid[xCurr * 2 + 1][yWall / 2].add(new Wall());
         }
     }
 
-    private void setCellBackground(int row, int col, Color color) {
-        grid[row * 2 + 1][col * 2 + 1].setBackground(color);
+    private void setCellBackground(int row, int col /*Color color*/) {
+        grid[row * 2 + 1][col * 2 + 1].setBackground(wallColor);
+        grid[row * 2 + 1][col * 2 + 1].add(new Wall());
     }
 
     public List<Cell> getNonWallCells() {
@@ -201,7 +208,6 @@ public class Maze extends JPanel implements KeyListener {
         }
         return nonWallCells;
     }
-
 
     public List<Cell> findGhostStartingPoint() {
         List<Cell> pos = new ArrayList<>();
@@ -220,14 +226,12 @@ public class Maze extends JPanel implements KeyListener {
         return side;
     }
 
+    //Event delegation
+
     @Override
     public void keyTyped(KeyEvent e) {
-        //TODO: make sure this is not needed
-        //Cell currCell = grid[pac.getYPos()][pac.getYPos()];
     }
 
-
-    //TODO: think about making the keyListeners a part of Pacman Class
     @Override
     public void keyPressed(KeyEvent e) {
         if (moveInProgress) {
@@ -257,7 +261,6 @@ public class Maze extends JPanel implements KeyListener {
                 dy = 1;
                 break;
 
-            //THIS PART WOULD BE THE ONLY ONE THAT WON'T BELONG IN THE PACMAN CLASS, STRICTLY RELATED TO THE GAME
             case KeyEvent.VK_ESCAPE:
                 running = false;
                 ScoreKeeper.stop();
@@ -266,7 +269,7 @@ public class Maze extends JPanel implements KeyListener {
 
 
                 try {
-                    ScoreKeeper.newScore(ScoreKeeper.getScoreStr(), nick);
+                    ScoreKeeper.newScore(nick);
                     ScoreKeeper.reset();
                     System.exit(0);
                 }catch(IOException exc) {
@@ -285,8 +288,6 @@ public class Maze extends JPanel implements KeyListener {
                 break;
         }
 
-
-
         // Calculate new position
         int newX = pac.getXPos() + dx;
         int newY = pac.getYPos() + dy;
@@ -294,7 +295,6 @@ public class Maze extends JPanel implements KeyListener {
         newX = coords[0];
         newY = coords[1];
 
-        //TODO: fix the redundancy
 
         if (Character.isValidMove(newX, newY, grid)) {
             pac.move(dx, dy);
@@ -304,7 +304,6 @@ public class Maze extends JPanel implements KeyListener {
                 try {
                     //minWait time should be 100, so if initial speed is 6,
                     // and at 7 it's -100, max speed should be 12
-                    //TODO: might add additional score update here
                     Thread.sleep(700 - ((pac.getSpeed() - pac.getInitialSpeed()) * 100));
                     moveInProgress = false;
                 } catch (InterruptedException exc) {
@@ -314,6 +313,11 @@ public class Maze extends JPanel implements KeyListener {
         } else {
             moveInProgress = false;
         }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
     }
 
     private void checkForGameOver() {
@@ -329,6 +333,7 @@ public class Maze extends JPanel implements KeyListener {
                             int remainingLives = Pacman.getLives();
                             if (remainingLives == 0) {
                                 isGameOver = true;
+                                running = false;
                                 //SwingUtilities.invokeLater(() -> {
                                 gameOver();
                                 //});
@@ -374,7 +379,6 @@ public class Maze extends JPanel implements KeyListener {
         removeAll();
         revalidate();
         repaint();
-        //enemies = new ArrayList<>();
         setupGameObjects();
 
         checkForGameOver();
@@ -391,7 +395,7 @@ public class Maze extends JPanel implements KeyListener {
             Enemy.setIsGeneratingUpgrades(false);
             Enemy.setAllGhostList(new ArrayList<Enemy>());
             nick = JOptionPane.showInputDialog(null, "Game over.\nYour score will be saved\nEnter your nickname","Unknown");
-            ScoreKeeper.newScore(ScoreKeeper.getScoreStr(), nick);
+            ScoreKeeper.newScore(nick);
             JPanel parent = (JPanel) getParent();
             parent.removeAll();
             resetGame();
@@ -400,10 +404,6 @@ public class Maze extends JPanel implements KeyListener {
         } catch (IOException exc) {
             exc.printStackTrace();
         }
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
     }
 
 }
