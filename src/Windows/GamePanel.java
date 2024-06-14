@@ -8,8 +8,8 @@ import Utils.ScoreKeeper;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 public class GamePanel extends JFrame {
     //TODO: make simpleton
@@ -56,6 +56,7 @@ public class GamePanel extends JFrame {
         add(hdrPlaceholder, BorderLayout.PAGE_START);
         add(new Maze(size, 3, ColorScheme.BG_DARK,ColorScheme.ACCENT_BLUE),BorderLayout.CENTER);
         add(new ScoreDisplay(), BorderLayout.PAGE_END);
+
     }
 
     //TODO: MAKE SURE IF IT REALLY NEEDS TO BE STATIC
@@ -65,14 +66,14 @@ public class GamePanel extends JFrame {
         if(instance == null) {
             synchronized (GamePanel.class) {
                 GamePanel.setSize(size);
-                return new GamePanel(size);
+                instance = new GamePanel(size);
             }
         }
         return instance;
     }
 
     public static void deleteGamePanel() {
-        getInstance(size).setVisible(true);
+        getInstance(size).setVisible(false);
         getInstance(size).dispose();
         instance = null;
     }
@@ -80,4 +81,5 @@ public class GamePanel extends JFrame {
     public static void setSize(int size) {
         GamePanel.size = size;
     }
+
 }

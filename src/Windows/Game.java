@@ -6,8 +6,6 @@ import Utils.ColorScheme;
 
 import javax.swing.*;
 
-
-//TODO: implement ComponentListener
 public class Game extends JFrame {
     private static Game instance;
     private Game() {

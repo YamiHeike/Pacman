@@ -117,13 +117,13 @@ public class Maze extends JPanel implements KeyListener {
                 int randFood = (int) (Math.random() * 3);
                 switch (randFood) {
                     case 0:
-                        grid[cell.getXPos()][cell.getYPos()].add(new Food(Food.FoodSize.SMALL));
+                        grid[cell.getXPos()][cell.getYPos()].add(new Food(Food.FoodSize.SMALL), BorderLayout.CENTER);
                         break;
                     case 1:
-                        grid[cell.getXPos()][cell.getYPos()].add(new Food(Food.FoodSize.MEDIUM));
+                        grid[cell.getXPos()][cell.getYPos()].add(new Food(Food.FoodSize.MEDIUM), BorderLayout.CENTER);
                         break;
                     case 2:
-                        grid[cell.getXPos()][cell.getYPos()].add(new Food(Food.FoodSize.LARGE));
+                        grid[cell.getXPos()][cell.getYPos()].add(new Food(Food.FoodSize.LARGE), BorderLayout.CENTER);
                         break;
                 }
             }
@@ -273,7 +273,7 @@ public class Maze extends JPanel implements KeyListener {
                 break;
             case KeyEvent.VK_ENTER:
                 pause();
-                int choice = JOptionPane.showConfirmDialog(null,"Windows.Game Paused. Do you wish to resume?","Pause",JOptionPane.YES_NO_OPTION,JOptionPane.PLAIN_MESSAGE);
+                int choice = JOptionPane.showConfirmDialog(null,"Game Paused. Do you wish to resume?","Pause",JOptionPane.YES_NO_OPTION,JOptionPane.PLAIN_MESSAGE);
                 if(choice == JOptionPane.YES_OPTION) {
                     resume();
                 } else {
@@ -299,8 +299,6 @@ public class Maze extends JPanel implements KeyListener {
 
             new Thread(() -> {
                 try {
-                    //minWait time should be 100, so if initial speed is 6,
-                    // and at 7 it's -100, max speed should be 12
                     Thread.sleep(700 - ((pac.getSpeed() - pac.getInitialSpeed()) * 100));
                     moveInProgress = false;
                 } catch (InterruptedException exc) {
@@ -331,9 +329,7 @@ public class Maze extends JPanel implements KeyListener {
                             if (remainingLives == 0) {
                                 isGameOver = true;
                                 running = false;
-                                //SwingUtilities.invokeLater(() -> {
                                 gameOver();
-                                //});
                             }
                         } catch (InterruptedException exc) {
                             Thread.currentThread().interrupt();
@@ -377,7 +373,7 @@ public class Maze extends JPanel implements KeyListener {
         revalidate();
         repaint();
         setupGameObjects();
-
+        removeAll();
         checkForGameOver();
         requestFocusInWindow();
     }
@@ -391,11 +387,11 @@ public class Maze extends JPanel implements KeyListener {
             Enemy.setIsRunning(false);
             Enemy.setIsGeneratingUpgrades(false);
             Enemy.setAllGhostList(new ArrayList<Enemy>());
-            nick = JOptionPane.showInputDialog(null, "Windows.Game over.\nYour score will be saved\nEnter your nickname","Unknown");
+            nick = JOptionPane.showInputDialog(null, "Windows.Game over.\nYour score will be saved\nEnter your nickname","GAME OVER", JOptionPane.PLAIN_MESSAGE);
             ScoreKeeper.newScore(nick);
-            resetGame();
             GamePanel.deleteGamePanel();
             Game.openMenu();
+
             ScoreKeeper.reset();
         } catch (IOException exc) {
             exc.printStackTrace();

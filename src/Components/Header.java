@@ -32,4 +32,8 @@ public class Header extends JLabel implements SwingConstants {
         setAlignmentY(CENTER);
     }
 
+    public void changeIcon(ImageIcon newIcn) {
+        setIcon(newIcn);
+    }
+
 }

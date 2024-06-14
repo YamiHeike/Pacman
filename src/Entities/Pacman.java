@@ -111,7 +111,7 @@ public class Pacman extends Character implements ComponentListener {
         Thread eatingAnimation = new Thread(() -> {
             try {
                 while (isRunning) {
-                    Thread.sleep(700 - ((getSpeed() - getInitialSpeed()) * 100));
+                    Thread.sleep(400 - ((getSpeed() - getInitialSpeed()) * 50));
                     SwingUtilities.invokeLater(() -> {
                         synchronized (this.getPacmanImages()) {
                             ImageIcon currentImg = (ImageIcon) this.getIcon();

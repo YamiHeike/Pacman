@@ -4,10 +4,10 @@ import Utils.ImageLibrary;
 import Utils.ImageScaler;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.List;
-import java.awt.Component;
 
 public class Enemy extends Character {
 
@@ -23,8 +23,7 @@ public class Enemy extends Character {
         super(initialSpeed, grid);
         allGhostsList.add(this);
         this.ghostColor = ghostColor;
-        //isRunning = true;
-        //isGeneratingUpgrades = true;
+
         try {
             switch (ghostColor) {
                 case RED -> setIcon(ImageScaler.adjustImg(new ImageIcon(ImageLibrary.GHOST_RED), 27));
@@ -115,7 +114,7 @@ public class Enemy extends Character {
     private void addUpgrade(Cell target, Upgrade.UpgradeType pickedType) {
         Cell parent = grid[getXPos()][getYPos()];
         pickedType = Upgrade.typeLottery();
-        parent.add(new Upgrade(pickedType));
+        parent.add(new Upgrade(pickedType), BorderLayout.CENTER);
     }
 
     public int[] findDiff() {

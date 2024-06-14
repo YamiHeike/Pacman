@@ -11,13 +11,17 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 import java.awt.*;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 
-public class MainMenu extends JPanel {
+public class MainMenu extends JPanel implements ComponentListener {
     /*
     * First JPanel the user sees while opening the game
     * Allows navigation through the App
     */
 
+    private PacmanHeader mainHeader;
+    private Panel hdr;
     public MainMenu(Color fgColor, Color bgColor) {
 
         //Image manipulation
@@ -35,8 +39,7 @@ public class MainMenu extends JPanel {
 
         //Components
 
-        PacmanHeader mainHeader = new PacmanHeader();
-        //mainHeader.setIconTextGap(15);
+        mainHeader = new PacmanHeader();
         mainHeader.setHorizontalTextPosition(JLabel.LEFT);
 
         Button newGame = new Button("NEW GAME", ColorScheme.BG_DARK,ColorScheme.ACCENT_YELLOW,new GameCreator());
@@ -45,15 +48,13 @@ public class MainMenu extends JPanel {
 
         //Containers
 
-        JPanel hdr = new JPanel();
+        hdr = new Panel(ColorScheme.BG_DARK, ColorScheme.ACCENT_YELLOW);
         JPanel controls = new JPanel();
         hdr.setLayout(new FlowLayout(FlowLayout.CENTER));
-        hdr.setBackground(bgColor);
         hdr.setBorder(new EmptyBorder(4,6,4,6));
         controls.setOpaque(true);
         controls.setLayout(new GridLayout(0, 1));
         controls.setBackground(bgColor);
-
 
         //General settings
 
@@ -69,6 +70,29 @@ public class MainMenu extends JPanel {
         controls.add(exit);
         add(hdr, BorderLayout.PAGE_START);
         add(controls, BorderLayout.CENTER);
+        addComponentListener(this);
+    }
+
+    @Override
+    public void componentResized(ComponentEvent e) {
+        int parentHeight = hdr.getHeight();
+        int height = getHeight();
+        System.out.println(hdr.getHeight());
+        mainHeader.changeIcon(ImageScaler.adjustImg(new ImageIcon(ImageLibrary.PACMAN_LOGO),(parentHeight * 2) / 3 + height/30,parentHeight/2 + height/30));
+    }
+
+    @Override
+    public void componentMoved(ComponentEvent e) {
+
+    }
+
+    @Override
+    public void componentShown(ComponentEvent e) {
+
+    }
+
+    @Override
+    public void componentHidden(ComponentEvent e) {
 
     }
 }

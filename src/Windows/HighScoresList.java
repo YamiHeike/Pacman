@@ -8,15 +8,18 @@ import Utils.ColorScheme;
 import Utils.ScoreKeeper;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.util.Vector;
 
-public class HighScoresList extends JFrame {
+public class HighScoresList extends JFrame implements WindowListener, ListSelectionListener {
     /*
     * Data processing Panel class
     * Displays highscores JList with HSList model
-    * TODO: model into panel
     */
 
     static Vector<String> data;
@@ -37,6 +40,9 @@ public class HighScoresList extends JFrame {
         JList<String> highscores = new JList<>();
         HSListModel model = new HSListModel(data);
         highscores.setModel(model);
+        highscores.setBackground(ColorScheme.BG_DARK);
+        highscores.setForeground(ColorScheme.ACCENT_YELLOW);
+
 
         Header hsHeader = new Header("HIGHSCORES",null, new Font(Font.MONOSPACED, Font.BOLD, 20),ColorScheme.BG_DARK, ColorScheme.ACCENT_YELLOW);
 
@@ -50,20 +56,19 @@ public class HighScoresList extends JFrame {
         //Building the frame
         setVisible(true);
         setLayout(new BorderLayout());
-        //setBackground(ColorScheme.BG_DARK);
-        //setForeground(ColorScheme.ACCENT_YELLOW);
         add(panel, BorderLayout.PAGE_START);
         add(hsPane, BorderLayout.CENTER);
         pack();
+        addWindowListener(this);
 
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
     }
 
     public static HighScoresList getInstance() {
         synchronized (HighScoresList.class) {
             if (instance == null) {
-                return new HighScoresList();
+                instance = new HighScoresList();
             }
             return instance;
         }
@@ -78,5 +83,39 @@ public class HighScoresList extends JFrame {
     public static void openHighscoresList() {
         SwingUtilities.invokeLater(() -> getInstance());
     }
+
+    @Override
+
+    public void windowClosing(WindowEvent e) {
+        deleteHighscoresList();
+    }
+
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
+
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowOpened(WindowEvent e) {}
+
+
+
+    @Override
+    public void windowIconified(WindowEvent e) {}
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {}
+
+    @Override
+    public void windowActivated(WindowEvent e) {}
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {}
+
 
 }
