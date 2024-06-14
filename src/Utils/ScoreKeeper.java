@@ -34,13 +34,12 @@ public class ScoreKeeper implements Serializable {
     }
 
     public static ScoreKeeper getInstance() {
-        if (instance == null) {
             synchronized (ScoreKeeper.class) {
                 if (instance == null) {
                     instance = new ScoreKeeper();
                 }
             }
-        }
+
         return instance;
     }
 

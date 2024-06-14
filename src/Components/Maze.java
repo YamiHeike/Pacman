@@ -7,6 +7,8 @@ import Entities.Character;
 import Entities.Pacman;
 import Utils.ColorScheme;
 import Utils.ScoreKeeper;
+import Windows.Game;
+import Windows.GamePanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,7 +21,7 @@ import java.util.List;
 
 public class Maze extends JPanel implements KeyListener {
     /*
-    * Game logic class
+    * Windows.Game logic class
     * Generates a random maze with Depth-First Search Algorithm based on an entered size
     * The actual maze size is size * 2 + 1 to ensure the size isn't even
     * The Maze is filled with fully scalable cells
@@ -192,7 +194,7 @@ public class Maze extends JPanel implements KeyListener {
         }
     }
 
-    private void setCellBackground(int row, int col /*Color color*/) {
+    private void setCellBackground(int row, int col) {
         grid[row * 2 + 1][col * 2 + 1].setBackground(wallColor);
         grid[row * 2 + 1][col * 2 + 1].add(new Wall());
     }
@@ -264,26 +266,21 @@ public class Maze extends JPanel implements KeyListener {
             case KeyEvent.VK_ESCAPE:
                 running = false;
                 ScoreKeeper.stop();
-
-                String nick = JOptionPane.showInputDialog("Exitting the game. Enter your nickname for the highscores","Unknown");
-
-
-                try {
-                    ScoreKeeper.newScore(nick);
-                    ScoreKeeper.reset();
-                    System.exit(0);
-                }catch(IOException exc) {
-                    exc.printStackTrace();
-                }
+                isGameOver = true;
+                gameOver();
+                Game.deleteInstance();
+                SwingUtilities.invokeLater(() -> Game.openMenu());
                 break;
             case KeyEvent.VK_ENTER:
                 pause();
-                int choice = JOptionPane.showConfirmDialog(null,"Game Paused. Do you wish to resume?","Pause",JOptionPane.YES_NO_OPTION,JOptionPane.PLAIN_MESSAGE);
+                int choice = JOptionPane.showConfirmDialog(null,"Windows.Game Paused. Do you wish to resume?","Pause",JOptionPane.YES_NO_OPTION,JOptionPane.PLAIN_MESSAGE);
                 if(choice == JOptionPane.YES_OPTION) {
                     resume();
                 } else {
                     isGameOver = true;
                     gameOver();
+                    Game.deleteInstance();
+                    SwingUtilities.invokeLater(() -> Game.openMenu());
                 }
                 break;
         }
@@ -394,12 +391,11 @@ public class Maze extends JPanel implements KeyListener {
             Enemy.setIsRunning(false);
             Enemy.setIsGeneratingUpgrades(false);
             Enemy.setAllGhostList(new ArrayList<Enemy>());
-            nick = JOptionPane.showInputDialog(null, "Game over.\nYour score will be saved\nEnter your nickname","Unknown");
+            nick = JOptionPane.showInputDialog(null, "Windows.Game over.\nYour score will be saved\nEnter your nickname","Unknown");
             ScoreKeeper.newScore(nick);
-            JPanel parent = (JPanel) getParent();
-            parent.removeAll();
             resetGame();
-            parent.add(new MainMenu(ColorScheme.ACCENT_YELLOW, ColorScheme.BG_DARK));
+            GamePanel.deleteGamePanel();
+            Game.openMenu();
             ScoreKeeper.reset();
         } catch (IOException exc) {
             exc.printStackTrace();

@@ -109,7 +109,7 @@ public class Cell extends JPanel implements ComponentListener {
             }
             if (child instanceof Wall) {
                 Wall wall = (Wall) child;
-                adjustInstance(wall, ImageLibrary.WALL, width - 1, height - 1);
+                adjustInstance(wall, ImageLibrary.WALL, width, height);
                 continue;
             }
             if (child instanceof Upgrade) {

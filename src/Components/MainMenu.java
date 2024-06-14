@@ -35,8 +35,8 @@ public class MainMenu extends JPanel {
 
         //Components
 
-        Header mainHeader = new Header("PACMAN", scaledPacmanLogo,new Font(Font.MONOSPACED, Font.BOLD, 40),ColorScheme.BG_DARK, ColorScheme.ACCENT_YELLOW);
-        mainHeader.setIconTextGap(15);
+        PacmanHeader mainHeader = new PacmanHeader();
+        //mainHeader.setIconTextGap(15);
         mainHeader.setHorizontalTextPosition(JLabel.LEFT);
 
         Button newGame = new Button("NEW GAME", ColorScheme.BG_DARK,ColorScheme.ACCENT_YELLOW,new GameCreator());
@@ -63,7 +63,7 @@ public class MainMenu extends JPanel {
 
         //Frame Construction
 
-        hdr.add(mainHeader);
+        hdr.add(mainHeader, BorderLayout.PAGE_START);
         controls.add(newGame);
         controls.add(highScores);
         controls.add(exit);
