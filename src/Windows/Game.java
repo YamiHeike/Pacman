@@ -7,6 +7,11 @@ import Utils.ColorScheme;
 import javax.swing.*;
 
 public class Game extends JFrame {
+    /*
+    * Main menu
+    * Singleton pattern: only one instance is allowed
+    * The only application window with exit on close
+    * */
     private static Game instance;
     private Game() {
 
@@ -39,8 +44,9 @@ public class Game extends JFrame {
     }
 
     public static void closeMenu() {
-        getInstance().setVisible(true);
+        getInstance().setVisible(false);
         getInstance().dispose();
+        deleteInstance();
     }
 
     public static void openMenu() {

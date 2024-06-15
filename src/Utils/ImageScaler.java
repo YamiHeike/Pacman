@@ -1,11 +1,14 @@
 package Utils;
 import javax.swing.*;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.*;
 
 public class ImageScaler {
+
+    private ImageScaler() {
+        throw new UnsupportedOperationException("This is an utility class and cannot be instantiated");
+    }
 
     public static ImageIcon adjustImg(ImageIcon img, int squareSide) {
         if (img == null || squareSide <= 0) {

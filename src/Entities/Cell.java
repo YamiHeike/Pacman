@@ -20,39 +20,15 @@ public class Cell extends JPanel implements ComponentListener {
 
     int x;
     int y;
-    JLabel interiorType;
+    //JLabel interiorType;
 
     public Cell(int x, int y) {
         this.x = x;
         this.y = y;
-        interiorType = new JLabel();
-        add(interiorType);
         setPreferredSize(new Dimension(50, 50));
         addComponentListener(this);
     }
 
-    public JLabel getInteriorType() {
-        return interiorType;
-    }
-
-    public <T extends JLabel> void setInteriorType(final T interiorType) {
-        if (SwingUtilities.isEventDispatchThread()) {
-            updateInteriorType(interiorType);
-        } else {
-            SwingUtilities.invokeLater(() -> updateInteriorType(interiorType));
-        }
-    }
-
-    //Ensuring deletion of previous content
-    private <T extends JLabel> void updateInteriorType(T interiorType) {
-        this.interiorType = interiorType;
-        if (getComponentCount() > 0) {
-            remove(0);
-        }
-        add(interiorType);
-        revalidate();
-        repaint();
-    }
 
     @Override
     public boolean equals(Object obj) {
@@ -94,7 +70,6 @@ public class Cell extends JPanel implements ComponentListener {
 
         if (children.length == 0) return;
 
-        //TODO: create method to simplify the code
         for (Component child : children) {
             if (child instanceof Pacman) continue;
             if (child instanceof Food) {

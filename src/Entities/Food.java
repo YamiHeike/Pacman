@@ -1,10 +1,9 @@
 package Entities;
 import Utils.ImageLibrary;
-import Utils.ImageScaler;
+
 
 import javax.swing.*;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
+
 
 public class Food extends JLabel  {
     private int bonusPoints;
@@ -32,7 +31,7 @@ public class Food extends JLabel  {
             setIcon(new ImageIcon(foodIcon));
         } catch(RuntimeException exc) {
             JOptionPane.showMessageDialog(null,"Incorrect food type");
-            System.out.println("Food type must be");
+            System.out.println("Food type must be one of FoodType enum values");
         }
         setHorizontalAlignment(JLabel.CENTER);
         setVerticalAlignment(JLabel.CENTER);

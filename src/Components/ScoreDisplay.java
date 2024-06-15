@@ -47,9 +47,7 @@ public class ScoreDisplay extends JPanel {
                 while (true) {
                     synchronized (lock) {
                         while (!scoreKeeper.isTracking()) {
-                            System.out.println("Wait...");
                             lock.wait();
-
                         }
                     }
                     updateLabels();

@@ -13,7 +13,7 @@ public class GameCreator implements ActionListener {
      public void actionPerformed(ActionEvent e) {
          try {
              JButton src = (JButton) e.getSource();
-             int size = Integer.parseInt(JOptionPane.showInputDialog("Choose a size for your gameboard.\nEnter a number from 6 to 11"));
+             int size = Integer.parseInt(JOptionPane.showInputDialog(null,"Choose a size for your gameboard.\nEnter a number from 6 to 11", "Board Size Prompt",JOptionPane.PLAIN_MESSAGE));
              if(size < 6 || size >= 12) {
                  throw new NumberFormatException();
              }
@@ -29,9 +29,11 @@ public class GameCreator implements ActionListener {
 
          } catch (NumberFormatException exc) {
              JOptionPane.showMessageDialog(null,"Incorrect input format. Enter a number from 6 to 11");
+         } catch(RuntimeException ex) {
+             JOptionPane.showMessageDialog(null,"You have chosen the 'No' option.");
          }
          catch(Exception exc) {
-             JOptionPane.showMessageDialog(null,"Windows.Game creation cancelled");
+             JOptionPane.showMessageDialog(null,"Game creation cancelled");
          }
      }
 

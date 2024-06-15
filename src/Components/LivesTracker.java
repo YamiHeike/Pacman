@@ -14,7 +14,6 @@ public class LivesTracker extends JPanel {
     * The main purpose of this class is to track state of Pacman's lives
     * It uses a Thread and a livesLock monitor to ensure synchronization
     * It also serves as a tool to visulise lives: number of JLabels = number of Pacman's lives
-    *
     */
 
     private final ImageIcon livesIcon = new ImageIcon(ImageLibrary.HEART);
@@ -46,7 +45,6 @@ public class LivesTracker extends JPanel {
             try {
                 while (isTracking) {
                     SwingUtilities.invokeLater(() -> {
-                        //was this before
                         synchronized (livesLock) {
                             int diff = calculateDiff();
                             if (diff != 0) {
@@ -61,7 +59,8 @@ public class LivesTracker extends JPanel {
                                 }
                                 revalidate();
                                 repaint();
-                                if(diff == initialPanelNum) Thread.currentThread().interrupt();
+                                if(Pacman.getLives() == 0) Thread.currentThread().interrupt();
+
                             }
                         }
                     });

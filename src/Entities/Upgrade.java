@@ -5,7 +5,6 @@ import Utils.ImageScaler;
 import Utils.ScoreKeeper;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.Random;
 
 public class Upgrade extends JLabel {
@@ -154,13 +153,11 @@ public class Upgrade extends JLabel {
         return ageInSec;
     }
 
-    //Upgrade types
-
     enum UpgradeType {
         SPEED,
         LIVES,
         INVINCIBLE,
-        PREDATOR, //This one - ability to kill ghosts
+        PREDATOR,
         SCORE_SPEEDER
     }
 }

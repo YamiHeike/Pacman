@@ -11,27 +11,11 @@ import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
-public class GamePanel extends JFrame {
-    //TODO: make simpleton
-
-    /*
-    *
-        public static Game getInstance() {
-        if (instance == null) {
-            synchronized (Game.class) {
-                if (instance == null) {
-                    instance = new Game();
-                }
-            }
-        }
-        return instance;
-    }
-    * */
+public class GamePanel extends JFrame implements WindowListener {
 
     private static int size;
     private static GamePanel instance;
 
-    //TODO: with simpleton - make private
     private GamePanel(int size) {
 
         this.size = size;
@@ -50,7 +34,7 @@ public class GamePanel extends JFrame {
         setBackground(ColorScheme.BG_DARK);
         setSize(1000,1000);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setVisible(true);
 
         add(hdrPlaceholder, BorderLayout.PAGE_START);
@@ -58,8 +42,6 @@ public class GamePanel extends JFrame {
         add(new ScoreDisplay(), BorderLayout.PAGE_END);
 
     }
-
-    //TODO: MAKE SURE IF IT REALLY NEEDS TO BE STATIC
 
     public static GamePanel getInstance(int size) {
 
@@ -82,4 +64,40 @@ public class GamePanel extends JFrame {
         GamePanel.size = size;
     }
 
+    @Override
+    public void windowOpened(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+        if(Game.getInstance() == null) {
+            Game.openMenu();
+        }
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowIconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
+
+    }
 }

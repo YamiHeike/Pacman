@@ -1,6 +1,11 @@
 package Utils;
 
 public final class ImageLibrary {
+    /*
+    * Utility class, stores the paths to all graphical files in String variables
+    *
+    * */
+
     //PACMAN
     public static final String PACMAN_LOGO = "src/assets/Pacman.png";
     public static final String PACMAN_CLOSED = "src/assets/pacman_closed.png";
@@ -20,6 +25,7 @@ public final class ImageLibrary {
     public static final String INVINCIBLE = "src/assets/invincible_icon.png";
     public static final String KILLER = "src/assets/killer_icon.png";
     public static final String SPEED = "src/assets/speed.png";
+    //Wall
     public static final String WALL = "src/assets/wall_icon.png";
 
 

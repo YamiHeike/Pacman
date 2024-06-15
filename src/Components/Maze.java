@@ -172,7 +172,7 @@ public class Maze extends JPanel implements KeyListener {
         return neighbors;
     }
 
-    private void addWall(Cell current, Cell next /*Color wallColor*/) {
+    private void addWall(Cell current, Cell next) {
 
         int xCurr = current.getXPos();
         int yCurr = current.getYPos();
@@ -218,7 +218,7 @@ public class Maze extends JPanel implements KeyListener {
         int randIdx;
         Random random = new Random();
         for (int i = 0; i < enemyNum; i++) {
-            randIdx = random.nextInt(max); //max is excluded
+            randIdx = random.nextInt(max);
             pos.add(nwc.get(randIdx));
         }
         return pos;
@@ -326,7 +326,7 @@ public class Maze extends JPanel implements KeyListener {
                         try {
                             Thread.sleep(500);
                             int remainingLives = Pacman.getLives();
-                            if (remainingLives == 0) {
+                            if (remainingLives == 0 || ScoreKeeper.getCurrTimeInSeconds() >= 600) {
                                 isGameOver = true;
                                 running = false;
                                 gameOver();
@@ -387,10 +387,14 @@ public class Maze extends JPanel implements KeyListener {
             Enemy.setIsRunning(false);
             Enemy.setIsGeneratingUpgrades(false);
             Enemy.setAllGhostList(new ArrayList<Enemy>());
-            nick = JOptionPane.showInputDialog(null, "Windows.Game over.\nYour score will be saved\nEnter your nickname","GAME OVER", JOptionPane.PLAIN_MESSAGE);
+            nick = JOptionPane.showInputDialog(null, "Windows.Game over.\nYour score will be saved\nEnter your nickname","GAME OVER", JOptionPane.INFORMATION_MESSAGE);
+            if(nick == null) {
+                nick = "Unknown";
+            }
             ScoreKeeper.newScore(nick);
-            GamePanel.deleteGamePanel();
             Game.openMenu();
+            GamePanel.deleteGamePanel();
+
 
             ScoreKeeper.reset();
         } catch (IOException exc) {

@@ -8,16 +8,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class Pacman extends Character implements ComponentListener {
-    //TODO: lives and default lives will need to be made static
-    private int x;
-    private int y;
     private int speed;
     private int initialSpeed;
     private boolean gameOver = false;

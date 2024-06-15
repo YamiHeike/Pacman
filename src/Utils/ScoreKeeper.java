@@ -1,29 +1,23 @@
 package Utils;
-
-import Components.ScoreDisplay;
-
 import javax.swing.*;
 import java.io.*;
-import java.sql.SQLOutput;
 import java.util.*;
 
 public class ScoreKeeper implements Serializable {
     /*
-     * FINAL PURPOSE OF THIS CLASS: WRITE THE JLIST DESC ORDER INTO HIGHSCORES.TXT
-     * THIS SHOULD ALSO DISPLAY THE CONTENT OF THAT FILE
-     * IOEXCEPTIONS SHOULD BE HANDLED IN THE GUI COMPONENT (E.G SEND AN ERROR MSG)
+     * A timer for my game
+     * It stores the current score as well as current time
+     * Singleton pattern: it can be instantiated, but only one instance is allowed
      */
 
-
-    //TODO: redo --> singleton pattern
     private static ScoreKeeper instance;
-    private static boolean tracksScore = false; //
-    public static int currScore; //consider static
+    private static boolean tracksScore = false;
+    public static int currScore;
     public static int currTimeInSeconds;
-    public static String scoreStr; //monitor
+    public static String scoreStr;
     public static boolean isDouble = false;
     private static Thread tracker;
-    private final Object lock = new Object();
+    private final static Object lock = new Object();
 
     private ScoreKeeper() {
         tracksScore = true;
@@ -46,7 +40,7 @@ public class ScoreKeeper implements Serializable {
     //Score increment Thread
 
     private static void track() {
-        synchronized (scoreStr) {
+        synchronized (lock) {
             tracker = new Thread(() -> {
                 try {
                     while(tracksScore && currScore < Integer.MAX_VALUE) {
@@ -138,8 +132,6 @@ public class ScoreKeeper implements Serializable {
     public static int getCurrTimeInSeconds() {
         return currTimeInSeconds;
     }
-
-    //TODO: to rename
 
     public static void setCurrScore(int points) {
         if(Integer.MAX_VALUE - points > currScore) {

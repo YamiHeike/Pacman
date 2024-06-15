@@ -2,8 +2,8 @@ package Windows;
 
 import Components.HSListModel;
 import Components.Header;
+import Components.HighScoresCellRenderer;
 import Components.Panel;
-import Events.ToMainMenu;
 import Utils.ColorScheme;
 import Utils.ScoreKeeper;
 
@@ -42,6 +42,7 @@ public class HighScoresList extends JFrame implements WindowListener, ListSelect
         highscores.setModel(model);
         highscores.setBackground(ColorScheme.BG_DARK);
         highscores.setForeground(ColorScheme.ACCENT_YELLOW);
+        highscores.setCellRenderer(new HighScoresCellRenderer());
 
 
         Header hsHeader = new Header("HIGHSCORES",null, new Font(Font.MONOSPACED, Font.BOLD, 20),ColorScheme.BG_DARK, ColorScheme.ACCENT_YELLOW);

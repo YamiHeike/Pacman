@@ -9,6 +9,7 @@ import Utils.ImageScaler;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
@@ -24,13 +25,10 @@ public class MainMenu extends JPanel implements ComponentListener {
     private Panel hdr;
     public MainMenu(Color fgColor, Color bgColor) {
 
-        //Image manipulation
-
         ImageIcon pacmanLogo = new ImageIcon(ImageLibrary.PACMAN_LOGO);
-        ImageIcon scaledPacmanLogo = ImageScaler.adjustImg(pacmanLogo,85,60);
 
         try {
-            UIManager.setLookAndFeel(new NimbusLookAndFeel());
+            UIManager.setLookAndFeel(new MetalLookAndFeel());
         } catch (UnsupportedLookAndFeelException e) {
             JOptionPane.showMessageDialog(null,"The Graphics for this game are not supported by your operating system");
             e.printStackTrace();
@@ -77,7 +75,6 @@ public class MainMenu extends JPanel implements ComponentListener {
     public void componentResized(ComponentEvent e) {
         int parentHeight = hdr.getHeight();
         int height = getHeight();
-        System.out.println(hdr.getHeight());
         mainHeader.changeIcon(ImageScaler.adjustImg(new ImageIcon(ImageLibrary.PACMAN_LOGO),(parentHeight * 2) / 3 + height/30,parentHeight/2 + height/30));
     }
 

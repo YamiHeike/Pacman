@@ -6,8 +6,7 @@ import Utils.ImageScaler;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
+
 
 public class PacmanHeader extends Header {
 
