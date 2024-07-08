@@ -60,7 +60,7 @@ public class Maze extends JPanel implements KeyListener {
 
         setSize(800, 800);
         setLayout(new GridLayout(gridSide, gridSide));
-        setBorder(BorderFactory.createLineBorder(ColorScheme.ACCENT_YELLOW,4,true));
+        setBorder(BorderFactory.createLineBorder(ColorScheme.ACCENT_YELLOW,4));
         setBackground(ColorScheme.BG_DARK);
 
         for (int row = 0; row < gridSide; row++) {
@@ -387,7 +387,7 @@ public class Maze extends JPanel implements KeyListener {
             Enemy.setIsRunning(false);
             Enemy.setIsGeneratingUpgrades(false);
             Enemy.setAllGhostList(new ArrayList<Enemy>());
-            nick = JOptionPane.showInputDialog(null, "Windows.Game over.\nYour score will be saved\nEnter your nickname","GAME OVER", JOptionPane.INFORMATION_MESSAGE);
+            nick = JOptionPane.showInputDialog(null, "Game over.\nYour score will be saved\nEnter your nickname","GAME OVER", JOptionPane.INFORMATION_MESSAGE);
             if(nick == null) {
                 nick = "Unknown";
             }

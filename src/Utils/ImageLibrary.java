@@ -7,7 +7,9 @@ public final class ImageLibrary {
     * */
 
     //PACMAN
-    public static final String PACMAN_LOGO = "src/assets/Pacman.png";
+    //public static final String PACMAN_LOGO = "src/assets/Pacman.png";
+    public static final String PACMAN_LOGO = "src/assets/pacman_lg.png";
+
     public static final String PACMAN_CLOSED = "src/assets/pacman_closed.png";
     public static final String PACMAN_OPEN = "src/assets/pacman_open.png";
 
