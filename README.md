@@ -18,5 +18,5 @@ A Java Swing GUI project for my Computer Science studies in Polish-Japanese Acad
 
 </ul>
 
-I was awarded <bold>maximum score of 20/20</bold> as I managed to meet all of the requirements without using any of the forbidden functionalities and technologies in a very limited time.
+I was awarded <strong>maximum score of 20/20</strong> as I managed to meet all of the requirements without using any of the forbidden functionalities and technologies in a very limited time.
 It was a main purpose of this task.
