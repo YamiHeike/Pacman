@@ -1,17 +1,14 @@
 package Entities;
 
 import Utils.ColorScheme;
-import Utils.ScoreKeeper;
+
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.io.IOException;
-import java.util.EventObject;
+
 
 public abstract class Character extends JLabel {
 
-    //TODO: think about static and non-static fields
     int initialSpeed;
     //ImageIcon design;
     boolean isInvincible;
@@ -23,8 +20,6 @@ public abstract class Character extends JLabel {
     int dy;
 
 
-    //TODO: KeyEvent to move --made an abstract method
-
     public Character(int initialSpeed, Cell[][] grid) {
         this.initialSpeed = initialSpeed;
         this.speed = initialSpeed;
@@ -34,14 +29,10 @@ public abstract class Character extends JLabel {
         setVerticalAlignment(JLabel.CENTER);
     }
 
-    //Methods every character must implement
-
-
     public void setLocation(int x, int y) {
         this.x = x;
         this.y = y;
     }
-
 
     @Override
 
@@ -98,8 +89,6 @@ public abstract class Character extends JLabel {
     }
 
     public synchronized void updatePosition(int newX, int newY) {
-        // Check if newX and newY are within the bounds of the grid array
-
         JPanel currPos = grid[getXPos()][getYPos()];
         JPanel newPos = grid[newX][newY];
         SwingUtilities.invokeLater(() -> {
@@ -109,7 +98,7 @@ public abstract class Character extends JLabel {
                 currPos.revalidate();
             }
         });
-        setLocation(newX, newY); // Use the setLocation method of Character
+        setLocation(newX, newY);
         SwingUtilities.invokeLater(() -> {
             synchronized (newPos) {
                 newPos.add(this, BorderLayout.CENTER);
@@ -122,8 +111,6 @@ public abstract class Character extends JLabel {
     public Cell[][] getGrid() {
         return grid;
     }
-
-    //This is abstract because upgrade() of Upgrade class has more options for Pacman than for any other possible character
     public abstract void getUpgraded(Upgrade upgrade);
     public abstract void interract();
 

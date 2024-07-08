@@ -1,34 +1,34 @@
 package Entities;
 
+import Utils.ImageLibrary;
 import Utils.ImageScaler;
 import Utils.ScoreKeeper;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.Random;
 
 public class Upgrade extends JLabel {
-    //TODO: THIS ENTIRE CLASS SHOULD BE TESTED
+
+    /*
+     * Character upgrade class
+     * Upgrades for all Characters: SPEED, INVINCIBLE
+     * INVINCIBLE of non-playable characters negates INVINCIBLE of Pacman
+     * Upgrades for Pacman: LIVES, PREDATOR, SCORE_SPEEDER + updates for all Characters
+     */
+
     private ImageIcon upgradeImg;
     private UpgradeType type;
     private int ageInSec = 0;
-    /*
-    * Character upgrade class
-    * Upgrades for all Characters: SPEED, INVINCIBLE of non-playable characters negates INVINCIBLE of Pacman
-    * Upgrades for Pacman: LIVES, PREDATOR, SCORE_SPEEDER
-    */
-
-    //Method overflow
 
     public Upgrade(UpgradeType type) {
         this.type = type;
 
         switch(type) {
-            case SPEED -> upgradeImg = ImageScaler.adjustImg(new ImageIcon("src/assets/speed.png"), 25);
-            case LIVES -> upgradeImg = ImageScaler.adjustImg(new ImageIcon("src/assets/heart_icon.png"), 25);
-            case INVINCIBLE -> upgradeImg = ImageScaler.adjustImg(new ImageIcon("src/assets/invincible_icon.png"), 25);
-            case PREDATOR -> upgradeImg = ImageScaler.adjustImg(new ImageIcon("src/assets/killer_icon.png"), 25);
-            case SCORE_SPEEDER -> upgradeImg = ImageScaler.adjustImg(new ImageIcon("src/assets/double_icon.png"), 25);
+            case SPEED -> upgradeImg = ImageScaler.adjustImg(new ImageIcon(ImageLibrary.SPEED), 25);
+            case LIVES -> upgradeImg = ImageScaler.adjustImg(new ImageIcon(ImageLibrary.HEART), 25);
+            case INVINCIBLE -> upgradeImg = ImageScaler.adjustImg(new ImageIcon(ImageLibrary.INVINCIBLE), 25);
+            case PREDATOR -> upgradeImg = ImageScaler.adjustImg(new ImageIcon(ImageLibrary.KILLER), 25);
+            case SCORE_SPEEDER -> upgradeImg = ImageScaler.adjustImg(new ImageIcon(ImageLibrary.DOUBLE), 25);
 
         }
 
@@ -39,9 +39,6 @@ public class Upgrade extends JLabel {
     public void upgrade(Character character, UpgradeType type) {
         switch(type) {
             case SPEED:
-                //movement calculates time between moves with the expression: 700 - getSpeed() - (getInitialSpeed * 100)
-                //I set 6 as my inital speed
-
                 if(character.getSpeed() < 12) {
                     character.speed++;
                 }
@@ -65,8 +62,6 @@ public class Upgrade extends JLabel {
                 allowMurder(pac);
                 break;
             case SCORE_SPEEDER:
-                //MAY ADD CAN WALK THROUGH WALLS INSTEAD OF SCORE_SPEEDER IF IT CAUSES PROBLEMS
-                //TODO: define where the score speed will be kept
                 doubleScore();
                 break;
             case SPEED:
@@ -158,13 +153,11 @@ public class Upgrade extends JLabel {
         return ageInSec;
     }
 
-    //Upgrade types
-
     enum UpgradeType {
         SPEED,
         LIVES,
         INVINCIBLE,
-        PREDATOR, //This one - ability to kill ghosts
+        PREDATOR,
         SCORE_SPEEDER
     }
 }

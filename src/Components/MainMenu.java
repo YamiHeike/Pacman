@@ -3,24 +3,32 @@ package Components;
 import Events.CloseApp;
 import Events.GameCreator;
 import Events.HighScoresView;
+import Utils.ColorScheme;
+import Utils.ImageLibrary;
 import Utils.ImageScaler;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 import java.awt.*;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 
-public class MainMenu extends JPanel {
+public class MainMenu extends JPanel implements ComponentListener {
+    /*
+    * First JPanel the user sees while opening the game
+    * Allows navigation through the App
+    */
 
+    private PacmanHeader mainHeader;
+    private Panel hdr;
     public MainMenu(Color fgColor, Color bgColor) {
 
-        //Image manipulation
-
-        ImageIcon pacmanLogo = new ImageIcon("src/assets/Pacman.png");
-        ImageIcon scaledPacmanLogo = ImageScaler.adjustImg(pacmanLogo,85,60);
+        ImageIcon pacmanLogo = new ImageIcon(ImageLibrary.PACMAN_LOGO);
 
         try {
-            UIManager.setLookAndFeel(new NimbusLookAndFeel());
+            UIManager.setLookAndFeel(new MetalLookAndFeel());
         } catch (UnsupportedLookAndFeelException e) {
             JOptionPane.showMessageDialog(null,"The Graphics for this game are not supported by your operating system");
             e.printStackTrace();
@@ -29,26 +37,22 @@ public class MainMenu extends JPanel {
 
         //Components
 
-        JLabel mainHeader = new JLabel("PACMAN", scaledPacmanLogo, JLabel.CENTER);
-        mainHeader.setIconTextGap(15);
+        mainHeader = new PacmanHeader();
         mainHeader.setHorizontalTextPosition(JLabel.LEFT);
-        mainHeader.setFont(new Font(Font.MONOSPACED, Font.BOLD, 40));
-        mainHeader.setForeground(fgColor);
-        JButton newGame = new JButton("NEW GAME");
-        JButton highScores = new JButton("HIGH SCORES");
-        JButton exit = new JButton("EXIT");
+
+        Button newGame = new Button("NEW GAME", ColorScheme.BG_DARK,ColorScheme.ACCENT_YELLOW,new GameCreator());
+        Button highScores = new Button("HIGH SCORES", ColorScheme.BG_DARK, ColorScheme.ACCENT_YELLOW, new HighScoresView());
+        Button exit = new Button("EXIT", ColorScheme.BG_DARK, ColorScheme.ACCENT_YELLOW, new CloseApp());
 
         //Containers
 
-        JPanel hdr = new JPanel();
+        hdr = new Panel(ColorScheme.BG_DARK, ColorScheme.ACCENT_YELLOW);
         JPanel controls = new JPanel();
         hdr.setLayout(new FlowLayout(FlowLayout.CENTER));
-        hdr.setBackground(bgColor);
         hdr.setBorder(new EmptyBorder(4,6,4,6));
         controls.setOpaque(true);
         controls.setLayout(new GridLayout(0, 1));
         controls.setBackground(bgColor);
-
 
         //General settings
 
@@ -58,35 +62,34 @@ public class MainMenu extends JPanel {
 
         //Frame Construction
 
-        hdr.add(mainHeader);
+        hdr.add(mainHeader, BorderLayout.PAGE_START);
         controls.add(newGame);
         controls.add(highScores);
         controls.add(exit);
         add(hdr, BorderLayout.PAGE_START);
         add(controls, BorderLayout.CENTER);
+        addComponentListener(this);
+    }
 
-        //Event delegation
+    @Override
+    public void componentResized(ComponentEvent e) {
+        int parentHeight = hdr.getHeight();
+        int height = getHeight();
+        mainHeader.changeIcon(ImageScaler.adjustImg(new ImageIcon(ImageLibrary.PACMAN_LOGO),(parentHeight * 2) / 3 + height/30,parentHeight/2 + height/30));
+    }
 
-        newGame.addActionListener(new GameCreator());
-        exit.addActionListener(new CloseApp());
-        highScores.addActionListener(new HighScoresView());
+    @Override
+    public void componentMoved(ComponentEvent e) {
 
-        //Detailed styling
+    }
 
+    @Override
+    public void componentShown(ComponentEvent e) {
 
+    }
 
-        for(Component btn : controls.getComponents()) {
-            if(btn instanceof JButton) {
-                JButton control = (JButton) btn;
-                control.setOpaque(true);
-                control.setBackground(bgColor);
-                control.setForeground(fgColor);
-                control.setBorder(BorderFactory.createLineBorder(new Color(75, 0, 0),1));
-                control.setCursor(new Cursor(Cursor.HAND_CURSOR));
-            }
-        }
-
-
+    @Override
+    public void componentHidden(ComponentEvent e) {
 
     }
 }

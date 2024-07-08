@@ -1,32 +1,23 @@
 package Utils;
-
-import Components.ScoreDisplay;
-
 import javax.swing.*;
 import java.io.*;
-import java.sql.SQLOutput;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
 
-public class ScoreKeeper {
+public class ScoreKeeper implements Serializable {
     /*
-    * FINAL PURPOSE OF THIS CLASS: WRITE THE JLIST DESC ORDER INTO HIGHSCORES.TXT
-    * THIS SHOULD ALSO DISPLAY THE CONTENT OF THAT FILE
-    * IOEXCEPTIONS SHOULD BE HANDLED IN THE GUI COMPONENT (E.G SEND AN ERROR MSG)
-    */
+     * A timer for my game
+     * It stores the current score as well as current time
+     * Singleton pattern: it can be instantiated, but only one instance is allowed
+     */
 
-
-    //TODO: redo --> singleton pattern
     private static ScoreKeeper instance;
-    private static boolean tracksScore = false; //
-    public static int currScore; //consider static
+    private static boolean tracksScore = false;
+    public static int currScore;
     public static int currTimeInSeconds;
-    public static String scoreStr; //monitor
+    public static String scoreStr;
     public static boolean isDouble = false;
     private static Thread tracker;
-    private final Object lock = new Object();
+    private final static Object lock = new Object();
 
     private ScoreKeeper() {
         tracksScore = true;
@@ -37,21 +28,19 @@ public class ScoreKeeper {
     }
 
     public static ScoreKeeper getInstance() {
-        if (instance == null) {
             synchronized (ScoreKeeper.class) {
                 if (instance == null) {
                     instance = new ScoreKeeper();
                 }
             }
-        }
+
         return instance;
     }
 
-
     //Score increment Thread
-    //Used to be static
+
     private static void track() {
-        synchronized (scoreStr) {
+        synchronized (lock) {
             tracker = new Thread(() -> {
                 try {
                     while(tracksScore && currScore < Integer.MAX_VALUE) {
@@ -65,7 +54,6 @@ public class ScoreKeeper {
                         updateScoreStr();
 
                         if (Thread.currentThread().isInterrupted()) {
-                            // Handle interruption if needed, or just exit the loop
                             break;
                         }
 
@@ -125,11 +113,12 @@ public class ScoreKeeper {
         return this.tracksScore;
     }
 
-    public static void newScore(String score) throws IOException {
+    public static void newScore(String nick) throws IOException {
         BufferedWriter bw = null;
         try {
             bw = new BufferedWriter(new FileWriter(new File("src/highscores.txt"), true));
-            bw.write(score);
+            if(nick == null) nick = "Unknown";
+            bw.write(getInstance().toString() + " - " + nick);
             bw.newLine();
         } catch(Exception exc) {
             JOptionPane.showMessageDialog(null, "An Error has occured.\nYour score was not saved");
@@ -140,15 +129,9 @@ public class ScoreKeeper {
         }
     }
 
-    public static String getScoreStr() {
-        return scoreStr;
-    }
-
     public static int getCurrTimeInSeconds() {
         return currTimeInSeconds;
     }
-
-    //TODO: to rename
 
     public static void setCurrScore(int points) {
         if(Integer.MAX_VALUE - points > currScore) {
@@ -159,34 +142,39 @@ public class ScoreKeeper {
 
     //Read scores
     public static Vector<String> getScores() throws IOException {
-        BufferedReader br = null;
-        List<Integer> scores = new ArrayList<>();
-        try {
-            br = new BufferedReader(new FileReader(new File("src/highscores.txt")));
-            String c;
-            while((c = br.readLine()) != null) {
-                try {
-                    scores.add(Integer.parseInt(c));
-                } catch (NumberFormatException e) {
-                    System.out.println("Invalid score entry: " + c);
+        Map<Integer, String> scores = new TreeMap<>(Collections.reverseOrder());
+
+        try (BufferedReader br = new BufferedReader(new FileReader("src/highscores.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                int delimIdx = line.indexOf('-');
+                if (delimIdx != -1) {
+                    String scoreStr = line.substring(0, delimIdx).trim();
+                    String nick = line.substring(delimIdx + 1).trim();
+                    try {
+                        scores.put(Integer.parseInt(scoreStr), nick);
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid score entry: " + line);
+                    }
                 }
             }
         } catch (FileNotFoundException exc) {
             System.out.println("File not found");
-        } catch (Exception exc) {
-            System.out.println("Resource error. Try again later");
-            exc.getMessage();
-        } finally {
-            if (br != null)
-                br.close();
+            JOptionPane.showMessageDialog(null, "The Highscores file doesn't exist.\nIt might have been deleted or moved");
+        } catch (IOException exc) {
+            exc.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Resource error. Try again later");
         }
 
-        Collections.sort(scores, Collections.reverseOrder());
         Vector<String> sortedScores = new Vector<>();
-        for (Integer score : scores) {
-            sortedScores.add(score.toString());
+        for (Map.Entry<Integer, String> entry : scores.entrySet()) {
+            sortedScores.add(entry.getKey() + " - " + entry.getValue());
         }
         return sortedScores;
+    }
+
+    public String toString() {
+        return scoreStr;
     }
 
 

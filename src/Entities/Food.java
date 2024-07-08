@@ -1,33 +1,37 @@
 package Entities;
+import Utils.ImageLibrary;
+
+
 import javax.swing.*;
 
-public class Food extends JLabel{
+
+public class Food extends JLabel  {
     private int bonusPoints;
-    private FoodSize foodType;
-    private ImageIcon foodIcon;
+    private String foodIcon;
+    public FoodSize size;
 
     public Food(FoodSize size){
+
         try {
-            this.foodType = size;
+            this.size = size;
             switch (size) {
-                //TODO: find food icons
                 case SMALL:
-                    this.foodIcon = new ImageIcon("src/assets/apple_icon.png");
+                    this.foodIcon = ImageLibrary.APPLE;
                     bonusPoints = 3;
                     break;
                 case MEDIUM:
-                    this.foodIcon = new ImageIcon("src/assets/banana_icon.png");
+                    this.foodIcon = ImageLibrary.BANANA;
                     bonusPoints = 5;
                     break;
                 case LARGE:
-                    this.foodIcon = new ImageIcon("src/assets/orange_icon.png");
+                    this.foodIcon = ImageLibrary.ORANGE;
                     bonusPoints = 10;
                     break;
             }
-            setIcon(foodIcon);
+            setIcon(new ImageIcon(foodIcon));
         } catch(RuntimeException exc) {
             JOptionPane.showMessageDialog(null,"Incorrect food type");
-            System.out.println("Food type must be");
+            System.out.println("Food type must be one of FoodType enum values");
         }
         setHorizontalAlignment(JLabel.CENTER);
         setVerticalAlignment(JLabel.CENTER);
@@ -38,7 +42,7 @@ public class Food extends JLabel{
     public int getBonusPoints() {
         return bonusPoints;
     }
-
+    public FoodSize getFoodSize() { return size; }
     //Inner enum
 
     public enum FoodSize {

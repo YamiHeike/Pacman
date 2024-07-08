@@ -1,16 +1,13 @@
 package Components;
 
 import javax.swing.*;
-import java.io.Serializable;
 import java.util.Vector;
 
-public class HSListModel extends AbstractListModel<String> implements Serializable {
-    //TODO: think about whether it's needed
+public class HSListModel extends AbstractListModel<String> {
+    /*
+    *A model class for my highscores list
+    */
     Vector<String> data;
-
-
-
-
     public HSListModel(Vector<String> data){
         this.data = data;
     }
@@ -23,22 +20,5 @@ public class HSListModel extends AbstractListModel<String> implements Serializab
     public String getElementAt(int index) {
         return data.get(index);
     }
-
-    public void remove(int idx) {
-        data.remove(idx);
-        fireIntervalRemoved(this,idx, idx);
-    }
-
-    //Overflow
-    public void add(String score, int idx) {
-        data.add(idx,score);
-        fireIntervalAdded(this, idx, idx);
-    }
-
-    public void add(String score) {
-        add(score, getSize());
-    }
-
-    //TODO: research ListRenderer, ListCellRenderer
 
 }
